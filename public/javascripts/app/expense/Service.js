@@ -12,20 +12,11 @@ function ExpenseService($http, $location) {
         getAll : function(id){
             return $http.get('/expense/getAll');
         },
-        getIdFromEndPoint : function(pos = 1){
-            var absoluteurl = $location.absUrl();
-            var segments = absoluteurl.split("/");
-            var projectId = segments[segments.length - pos];
-            return projectId;
-        },
-        getItembyId : function(id){
-            return $http.get('/progress/get/' + id);  
+        getGLcodes : function(){
+            return $http.get('/expense/getGLcodes');
         },
         getCurrency : function () {
             return $http.get('http://api.fixer.io/latest?base=MYR');
-        },
-        remove : function (id) {
-            return $http.delete('/progress/' + id);
-        } 
+        }
     }
 }

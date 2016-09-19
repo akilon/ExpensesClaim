@@ -3,31 +3,25 @@
 var mysqlConnectionString = {
     
     connection  :{
-        
         dev : {
             host: 'localhost',
             user: 'root',
-            password : 'root@321',
-            database : 'jobcrawler'
-        }
-
-        ,
-        
+            password : 'xxx',
+            database : 'xxx'
+        },
         qa : {
             host: 'yourhost',
             user: 'yourdatabaseusername',
             password : 'yourpasssword',
             database : 'yourdatabasename'
-        }
-        ,prod : {
+        },
+        prod : {
             host: 'yourhost',
             user: 'yourdatabaseusername',
             password : 'yourpasssword',
             database : 'yourdatabasename'
         }
-    
     }
-
 };
 
 module.exports.mysqlConnectionString = mysqlConnectionString;

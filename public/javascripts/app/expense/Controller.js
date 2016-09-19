@@ -51,6 +51,8 @@ function GridController($window, $scope, $timeout, ExpenseService, ValidationSer
         $scope.reverse = !$scope.reverse;
     };
 
+    
+
     function run(){
         ExpenseService.getAll()
             .success(function(data){
@@ -70,11 +72,17 @@ function GridController($window, $scope, $timeout, ExpenseService, ValidationSer
                 }
             });
 
+        ExpenseService.getGLcodes()
+            .success(function(data){
+                if(data && data.glcodes && data.glcodes.length > 0){
+                    $scope.glcodes = data.glcodes;
+                }
+            });
     };
     run();
 
 
-    //Create
+    //EXPENSE CLAIM MODAL=============
     $scope.expense = {
         "name": "",
         "date": "",
@@ -103,7 +111,6 @@ function GridController($window, $scope, $timeout, ExpenseService, ValidationSer
         $scope.expense.bank_accholder = "";
     };
 
-
     function clearMessage() {
         $scope.validationResult.containsValidationError = false;
         $scope.message.containsSuccessfulMessage = false;
@@ -112,13 +119,14 @@ function GridController($window, $scope, $timeout, ExpenseService, ValidationSer
 
     $('.modal').on('hidden.bs.modal', function () {
         clearMessage();
-    })
+    });
 
     function displayMessage() {
         $scope.message.containsSuccessfulMessage = true;
         $scope.message.successfulMessage = "A Record added successfully"
     };
 
+    //Saving Expense claim form
     $scope.saveForm = function (expense) {
         var validationMessages = ValidationService.getValidationErrorMessage(
             [
@@ -163,7 +171,7 @@ function GridController($window, $scope, $timeout, ExpenseService, ValidationSer
     };
 
 
-    //EXPENSEITEMS
+    //EXPENSEITEMS MODAL===================
     $scope.expenseItem = {
         id : "",
         date : "",
@@ -197,26 +205,9 @@ function GridController($window, $scope, $timeout, ExpenseService, ValidationSer
         $scope.expenseItem.amount = "";
     };
 
-    $scope.glcodes = [
-     { id : 4165, name : 'Staff Reimbursement Mobile Claim - Mobile phone charges' },
-     { id : 4190, name : 'Postage'},
-     { id : 4191, name : 'Couriers'},
-     { id : 4200, name : 'Stationery'},
-     { id : 4311, name : 'International Fares - Oversea Air-ticket'},
-     { id : 4312, name : 'International Accomodation - Oversea hotel'},
-     { id : 4313, name : 'International Expenses - Oversea Transports and Meals Expense'},
-     { id : 4321, name : 'Local Fares - Taxi claim (client & candidate visit)'},
-     { id : 4001, name : 'Local Accomodation'},
-     { id : 4002, name : 'Local Expenses - OT meal'},
-     { id : 4003, name : 'Staff Incentives'},
-     { id : 4004, name : 'Staff flowers / Gifts - Gift / Bday cake for staff'},
-     { id : 4005, name : 'Candidate Flowers / Gifts - Meals with Candidates'},
-     { id : 4006, name : 'Entertainment - Clients (Meals with Client)'},
-     { id : 4007, name : 'Entertainment - Staff (Meals with Team / Staff)'},
-     { id : 4008, name : 'Subscriptions'},
-     { id : 4009, name : 'Memberships'}
-    ];
+    
 
+    //Saving Expense Item form
     $scope.saveExpenseItemForm = function (expenseItem) {
         var validationMessages = ValidationService.getValidationErrorMessage(
             [
@@ -255,7 +246,8 @@ function GridController($window, $scope, $timeout, ExpenseService, ValidationSer
 
             clearExpenseItems();  
 
-            function test(){
+            //calculate total RM on expenses grid
+            function totalRM(){
                 return $scope.expenseItems.filter(function(a){
                     return a.expenseId === $scope.expenseId;
                 }).reduce(function(a, v){
@@ -263,20 +255,12 @@ function GridController($window, $scope, $timeout, ExpenseService, ValidationSer
                 }, 0);
             }
 
-
             $scope.expenses.filter(function(a){
                 return a.id === $scope.expenseId;
             }).map(function(a){
-                a.total = test().toFixed(2);
+                a.total = totalRM().toFixed(2);
             });
-
             
-            //displayMessage();
-                    
-            /*$timeout(
-                function afterTimeOut() {
-                    clearMessage();                  
-                }, 2000);*/
         }
     };
 
